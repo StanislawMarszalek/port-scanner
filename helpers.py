@@ -1,4 +1,4 @@
-#error handler dla funckji port scannera pretty prinyg file saver
+
 from random import choices
 
 def save_result(pathfile:str,data:list[str])->None:
@@ -28,3 +28,28 @@ def save_result(pathfile:str,data:list[str])->None:
 
     return
 
+
+def print_ports(open_ports:list[int])->None:
+    """
+    Prints ports with their type. Prints 'NO PORT IS OPEN' if list is empty
+    
+    :param open_ports: list of open ports
+    :type open_ports: list[int]
+    """
+    print("PORT NUMBER".center(14),"PORT TYPE".center(14),sep="|")
+    print("-"*29)
+    if not open_ports:
+        print("NO PORT IS OPEN".center(29))
+    port_type:str
+    for port in open_ports:
+        if port<1024:
+            port_type="Well-Known"
+        elif port<49152:
+            port_type="Registered"
+        else:
+            port_type="Dynamic/Private"
+        print(f"{port}".center(14),port_type.center(14),sep="|")
+
+if __name__=="__main__":
+    print_ports([])
+    print_ports([1,2,1023,1024,49151,49152,50_000,65535])
