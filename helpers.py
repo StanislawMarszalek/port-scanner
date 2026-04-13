@@ -1,7 +1,7 @@
 
 from random import choices
 
-def save_result(pathfile:str,data:list[str])->None:
+def save_result(pathfile:str,data:list[int])->None:
     """
     Saving results of port scanning to a txt file
     
