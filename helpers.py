@@ -36,6 +36,7 @@ def print_ports(open_ports:list[int])->None:
     :param open_ports: list of open ports
     :type open_ports: list[int]
     """
+    print("-"*29)
     print("PORT NUMBER".center(14),"PORT TYPE".center(14),sep="|")
     print("-"*29)
     if not open_ports:
