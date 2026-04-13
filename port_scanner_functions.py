@@ -83,6 +83,9 @@ def scan_single_port(target_ip:str,target_port:int,time_out:float=1.0)->bool:
         raise ValueError("IP must be string in dot-decimal notation "
         "(x.x.x.x where x is a integer in range [0, 255])")
 
+    if not isinstance(time_out,float) or time_out<=0:
+        raise ValueError("Time out must be number float greater than 0.0")
+
     with socket.socket(socket.AF_INET,socket.SOCK_STREAM,socket.IPPROTO_TCP) as target_sock:
         target_sock.settimeout(time_out)
         try:
@@ -92,7 +95,8 @@ def scan_single_port(target_ip:str,target_port:int,time_out:float=1.0)->bool:
             return False
 
 
-def scan_ports(ports_list:Queue,target_ip:str,time_out:float=1.0,thread_numb:int=64)->dict[int,bool]:
+def scan_ports(ports_list:Queue,target_ip:str,
+               time_out:float=1.0,thread_numb:int=64)->dict[int,bool]:
 
     """
     Function to scan all given ports of given target
@@ -115,6 +119,9 @@ def scan_ports(ports_list:Queue,target_ip:str,time_out:float=1.0,thread_numb:int
 
     if not isinstance(thread_numb,int) or thread_numb<=0:
         raise ValueError("Number of threads must be integer greater than 0")
+
+    if not isinstance(time_out,float) or time_out<=0:
+        raise ValueError("Time out must be number float greater than 0.0")
 
     result:dict[int,bool]={}
     def thread_scan_port()->None:
