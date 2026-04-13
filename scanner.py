@@ -1,7 +1,7 @@
 import argparse
 import sys
 from time import perf_counter
-from port_scanner_functions import make_ports_list,scan_ports
+from port_scanner_functions import make_ports_list,scan_ports,Queue
 from helpers import save_result,print_ports
 
 def cli()->None:
@@ -13,10 +13,12 @@ def cli()->None:
     "Type python3 scanner.py -h or python3 scanner.py --help for additional information",
     description="Program scans given ports of the target and returns which are open")
 
+    #obligatory arguments
     parser.add_argument("target_ip",type=str,help="Target IP(IPv4) in dot-decimal format")
     parser.add_argument("first_port",type=int,help="Fist port to scan")
     parser.add_argument("last_port",type=int,help="Last port to scan")
 
+    #extra arguments 
     parser.add_argument("--threads_numb","-n",type=int,
                         help="Number of threads that will be used to scan ports(default: 64)")
     parser.add_argument("--time_out","-o",type=float,
@@ -32,13 +34,13 @@ def cli()->None:
 
     arguments=parser.parse_args()
     ip:str=arguments.target_ip
-    first_port=arguments.first_port
+    first_port:int=arguments.first_port
     last_port:int=arguments.last_port
     threads_numb:int = arguments.threads_numb if arguments.threads_numb is not None else 64
     scan_time_out:float=arguments.time_out if arguments.time_out is not None else 1.0
 
     try:
-        ports_to_scann=make_ports_list(first_port,last_port)
+        ports_to_scann:Queue=make_ports_list(first_port,last_port)
     except ValueError as ex:
         print(f"Error occured:{ex}")
         sys.exit(-1)

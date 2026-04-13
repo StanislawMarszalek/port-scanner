@@ -10,7 +10,7 @@ def save_result(pathfile:str,data:list[int])->None:
     :param data: list of ports to write into the file
     :type data: list[int]
     """
-
+    #Trying to open a given file
     try:
         if not isinstance(pathfile,str) or not pathfile.endswith(".txt"):
             raise ValueError
@@ -19,6 +19,7 @@ def save_result(pathfile:str,data:list[int])->None:
                 file.write(f"{port}\n")
 
     except (FileExistsError,FileNotFoundError,PermissionError,ValueError):
+        #If cannot open the given file a new one with a random name is created
         print(f"ERROR Could not write data to {pathfile}")
         new_file:str="".join(choices(list("abcdefghijklmnouvprstuwxyz1234567890"),k=25))+".txt"
         with open(new_file,mode="w",encoding="ascii") as file:
@@ -42,6 +43,7 @@ def print_ports(open_ports:list[int])->None:
     if not open_ports:
         print("NO PORT IS OPEN".center(29))
     port_type:str
+    #Checking port type (there are three categories)
     for port in open_ports:
         if port<1024:
             port_type="Well-Known"

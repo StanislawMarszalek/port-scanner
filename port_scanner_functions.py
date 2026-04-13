@@ -12,14 +12,14 @@ def is_dot_decimal(ip_to_check:str)->bool:
     :return: Function returns true if the string is a valid IP adress, false otherwise
     :rtype: bool
     """
-
+    #Checking if input value is correct
     if not isinstance(ip_to_check,str):
         raise ValueError("Input must be string")
 
     parts:list[str]=ip_to_check.split(".")
     if len(parts)!=4:
         return False
-
+    #Checking if a single octet is in range [0, 255]
     for idx,numb in enumerate(parts):
         try:
             parts[idx]=int(numb)
@@ -43,7 +43,7 @@ def make_ports_list(left_end:int,right_end:int)->Queue:
     :return: Queue that contains ports to scan from range [left_end, right_end]
     :rtype: Queue
     """
-
+    #Checking if input values are correct
     if not isinstance(left_end,int) or left_end<0:
         raise ValueError("Left end of the range must be integer greater than -1")
 
@@ -53,6 +53,7 @@ def make_ports_list(left_end:int,right_end:int)->Queue:
     if left_end>right_end:
         raise ValueError("Right end must be greater or equal to left end of the range")
 
+    #max size of the queue is 65536 because ports are in range [0, 65536]
     queue_of_ports:Queue=Queue(65536)
 
     for port in range(left_end,right_end+1):
@@ -75,7 +76,7 @@ def scan_single_port(target_ip:str,target_port:int,time_out:float=1.0)->bool:
     :return: Return true if the port is open, false otherwise
     :rtype: bool
     """
-
+    #Checking if input values are correct
     if not isinstance(target_port,int) or target_port<0 or target_port>65535:
         raise ValueError("Port must be integer in range [0, 65535]")
 
@@ -91,6 +92,7 @@ def scan_single_port(target_ip:str,target_port:int,time_out:float=1.0)->bool:
         try:
             target_sock.connect((target_ip,target_port))
             return True
+        #Every Exception  is marked as CLOSED PORT
         except Exception:
             return False
 
@@ -112,7 +114,7 @@ def scan_ports(ports_list:Queue,target_ip:str,
     :return: Dictionary that contains ports as keys
     :rtype: dict[int, bool]
     """
-
+    #Checking if input values are correct
     if not isinstance(target_ip,str) or not is_dot_decimal(target_ip):
         raise ValueError("IP must be string in dot-decimal notation "
         "(x.x.x.x where x is a integer in range [0,255])")
@@ -131,7 +133,8 @@ def scan_ports(ports_list:Queue,target_ip:str,
             port:int=ports_list.get()
             result[port]=scan_single_port(target_ip,port,time_out=time_out)
         return
-
+    
+    #Prepearing, starting threads and waiting for them to stop
     threads:list[Thread]=[Thread(target=thread_scan_port) for _ in range(thread_numb)]
     for thread in threads:
         thread.start()
