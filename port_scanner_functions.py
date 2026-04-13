@@ -1,6 +1,6 @@
 import socket
 from threading import Thread
-from queue import Queue
+from queue import Queue,Empty
 
 
 def is_dot_decimal(ip_to_check:str)->bool:
@@ -130,8 +130,11 @@ def scan_ports(ports_list:Queue,target_ip:str,
         # Funtion for threads
         nonlocal ports_list,result
         while not ports_list.empty():
-            port:int=ports_list.get()
-            result[port]=scan_single_port(target_ip,port,time_out=time_out)
+            try:
+                port:int=ports_list.get_nowait()
+                result[port]=scan_single_port(target_ip,port,time_out=time_out)
+            except Empty:
+                continue
         return
     
     #Prepearing, starting threads and waiting for them to stop

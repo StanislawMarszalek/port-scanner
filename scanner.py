@@ -18,7 +18,7 @@ def cli()->None:
     parser.add_argument("first_port",type=int,help="Fist port to scan")
     parser.add_argument("last_port",type=int,help="Last port to scan")
 
-    #extra arguments 
+    #extra arguments
     parser.add_argument("--threads_numb","-n",type=int,
                         help="Number of threads that will be used to scan ports(default: 64)")
     parser.add_argument("--time_out","-o",type=float,
